@@ -13,8 +13,8 @@ name_dist <- "exponential"
 
 lambda1<-1; lambda2<-1
 
-Nsim <- 1000
-Nmonte <- 50000
+Nsim <- 100
+Nmonte <- 1000
 
 p_asy <-c()
 p_ex <-c()
@@ -36,7 +36,7 @@ for(i in 1:Nsim){
   p_monte <- 0
   for(j in 1:Nmonte){
     res_lr_t <- survdiff(Surv(c(x1test,x2test), c(x1delta,x2delta)) ~ as.numeric(is.element(seq(1,N1+N2), sample(N1+N2, N2))))
-    z_cor_t <- (abs( res_lr$obs[1]-res_lr$exp[1])-0.5 )/sqrt(res_lr$var[1,1])
+    z_cor_t <- (abs( res_lr_t$obs[1]-res_lr_t$exp[1])-0.5 )/sqrt(res_lr_t$var[1,1])
     if(z_cor>z_cor_t) p_monte<-p_monte+1/Nmonte
   }
   p_asy <- c(p_asy, pnorm(z_cor, lower.tail = FALSE) )
@@ -45,3 +45,7 @@ for(i in 1:Nsim){
   setTxtProgressBar(pb, i) 
 }
 
+
+
+p_asy > qnorm(0.95)
+p_ex  > qnorm(0.95)
